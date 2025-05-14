@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking Companion</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+  <h1>What's in your kitchen?</h1>
+  <form id="ingredients-form">
+    <input type="text" id="ingredients" placeholder="e.g., eggs, cheese, tomato" required>
+    <button type="submit">Generate Recipe</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('ingredients-form');
+    const resultDiv = document.getElementById('result');
+    const inputField = document.getElementById('ingredients');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const ingredients = inputField.value.trim();
+      if (!ingredients) return;
+
+      // Show loading message
+      resultDiv.style.opacity = 1;
+      resultDiv.classList.add('cooked');
+      resultDiv.innerHTML = `<em>Cooking up something delicious... 🍳</em>`;
+
+      // Disable input and button during fetch
+      inputField.disabled = true;
+      form.querySelector('button').disabled = true;
+
+      try {
+        const res = await fetch('/recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ingredients })
+        });
+
+        const data = await res.json();
+
+        // Display recipe with animation
+        resultDiv.innerHTML = `<pre>${data.recipe}</pre>`;
+        resultDiv.style.animation = 'fadeInUp 0.8s ease 0.1s forwards';
+
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color: red;">Something went wrong. Please try again.</span>`;
+      } finally {
+        // Re-enable input and button
+        inputField.disabled = false;
+        form.querySelector('button').disabled = false;
+      }
+    });
+  </script>
+</body>
+
+</html>
