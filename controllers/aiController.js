@@ -1,4 +1,5 @@
 const axios = require('axios');
+const pool = require('../db');
 
 async function getRecipe(req, res) {
   const ingredients = req.body.ingredients;
@@ -24,6 +25,13 @@ async function getRecipe(req, res) {
 
     const recipe = response.data.choices[0].message.content;
     console.log("Recipe response:", recipe);
+
+    // Save to the database
+    await pool.query(
+      'INSERT INTO recipe_requests (ingredients, recipe) VALUES ($1, $2)',
+      [ingredients, recipe]
+    );
+
     res.json({ recipe });
   } catch (err) {
     console.error(err.response?.data || err.message);

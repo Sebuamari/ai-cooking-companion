@@ -17,10 +17,36 @@
 
   <div id="result"></div>
 
+  <h3>Saved Recipes</h3>
+  <div id="saved-recipes"></div>
+
   <script>
     const form = document.getElementById('ingredients-form');
     const resultDiv = document.getElementById('result');
     const inputField = document.getElementById('ingredients');
+    const savedRecipesDiv = document.getElementById('saved-recipes');
+
+    // Fetch saved recipes
+    async function fetchSavedRecipes() {
+      const res = await fetch('/recipes/saved');
+      const data = await res.json();
+      console.log(data);
+
+      if (data.length === 0) {
+        savedRecipesDiv.innerHTML = '<p>No saved recipes found.</p>';
+      } else {
+        savedRecipesDiv.innerHTML = data.map(recipe => `
+      <div class="recipe">
+        <h4>Ingredients: ${recipe.ingredients}</h4>
+        <p>Recipe: ${recipe.recipe}</p>
+        <p><small>Saved at: ${new Date(recipe.created_at).toLocaleString()}</small></p>
+      </div>
+    `).join('');
+      }
+    }
+
+    // Call this function when the page loads to display saved recipes
+    fetchSavedRecipes();
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

@@ -83,6 +83,30 @@ button:hover {
     text-wrap: unset;
 }
 
+#saved-recipes {
+    margin-top: 20px;
+}
+
+.recipe {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+h4 {
+    color: #333;
+}
+
+p {
+    color: #555;
+}
+
+small {
+    color: #888;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {
